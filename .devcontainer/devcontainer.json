@@ -1,0 +1,74 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "${localWorkspaceFolder}",
+	"build": {
+		// Sets the run context to one level up instead of the .devcontainer folder.
+		//"context": "..",
+		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+		"dockerfile": "../service/template_function/Dockerfile",
+		"args": { 
+			"LOCAL_DEV":"true"
+		},
+		"options": [
+			"--platform=linux/amd64"
+		] 
+	},
+	"runArgs": [
+		"--network=host",
+		"--add-host=host.docker.internal:host-gateway",
+		"--name=vscode-app"
+		
+		
+	],
+	
+	"containerEnv": {
+		"PYTHONPATH":"${containerWorkspaceFolder}/service/template_function/"
+	},
+	"remoteEnv": {
+		// Pass in the host directory for Docker mount commands from inside the container
+		"HOST_PROJECT_PATH": "${localWorkspaceFolder}",
+		"LOCAL_USER": "${localEnv:USERNAME}${localEnv:USER}",
+		"REMOTE_HOME":"${containerWorkspaceFolder}",
+		"AWS_DEFAULT_REGION":"eu-west-2",
+		"LOG_LEVEL":"DEBUG", // Alternative options are DEBUG
+		"LOCAL_DEV":"True", //This is a DevContainer. Provide extra services for Local Development
+		"APP_NAME":"ExampleFunction",
+		"ENVIRONMENT": "test1", //Set the local environment to use whilst developing locally.
+		"PATH_TO_APP": "/service/app/"
+	},
+	"mounts":[
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/root/.aws,type=bind,consistency=cached"
+	],
+	"features": {
+		// "ghcr.io/devcontainers/features/git:1": {
+		// 	"ppa": false,
+		// 	"version": "latest"
+		// },
+		// "ghcr.io/devcontainers/features/common-utils:2.2.0": {},
+		// "ghcr.io/devcontainers-contrib/features/black:2": {
+		// "version": "latest"
+		// }
+	},
+	"customizations": {
+		
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.black-formatter",
+				"ms-python.pylint",
+				"hashicorp.terraform",
+				"amazonwebservices.aws-toolkit-vscode",
+				"ms-azuretools.vscode-docker"
+			],
+			"settings":{
+				"extensions.verifySignature": false,
+				"git.path":"/usr/bin/git"
+			}
+		}
+	},
+	"postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/postCreateScript.sh"
+}
