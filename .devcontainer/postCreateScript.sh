@@ -1,5 +1,4 @@
 #!/bin/bash
-#Write dentsu okta config to gimme-aws-creds config location
 DOCKERVERSION="18.06.3-ce"
 
 pip install -r ./dev-requirements.txt 
